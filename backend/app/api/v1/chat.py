@@ -16,8 +16,8 @@ async def chat(
 ):
     if request.stream:
         return StreamingResponse(
-            service.chat_stream(request.messages),
+            service.chat_stream(request.session_id, request.messages),
             media_type="text/event-stream",
         )
-    reply = await service.chat(request.messages)
+    reply = await service.chat(request.session_id, request.messages)
     return ChatResponse(session_id=request.session_id, reply=reply)
