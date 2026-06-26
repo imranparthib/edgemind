@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     hf_model: str = "Qwen/Qwen2.5-1.5B-Instruct"
     hf_token: str = ""
 
+    llm_provider: str = "local"
+
     qdrant_url: str = "http://localhost:6333"
 
     database_url: str = ""
