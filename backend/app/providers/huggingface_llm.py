@@ -75,10 +75,15 @@ class HuggingFaceLLMProvider(BaseLLM):
 
         Thread(target=self.model.generate, kwargs=gen_kwargs).start()
 
+        def _next_token() -> str | None:
+            try:
+                return next(streamer)
+            except StopIteration:
+                return None
+
         loop = asyncio.get_running_loop()
         while True:
-            try:
-                text = await loop.run_in_executor(None, next, streamer)
-                yield text
-            except StopIteration:
+            text = await loop.run_in_executor(None, _next_token)
+            if text is None:
                 break
+            yield text
