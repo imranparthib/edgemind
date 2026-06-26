@@ -11,3 +11,4 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     session_id: str = "default"
     messages: list[ChatMessage] = []
+    stream: bool = False

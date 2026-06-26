@@ -13,8 +13,16 @@ Your responsibilities:
 
 class PromptBuilder:
 
-    def build(self, messages: list[ChatMessage]) -> list[ChatMessage]:
-        full = [ChatMessage(role="system", content=SYSTEM_PROMPT)]
+    def build(
+        self, messages: list[ChatMessage], context: str | None = None,
+    ) -> list[ChatMessage]:
+        system = SYSTEM_PROMPT
+        if context:
+            system += (
+                "\n\nUse the following knowledge to answer:\n\n"
+                f"{context}"
+            )
+        full = [ChatMessage(role="system", content=system)]
         full.extend(messages)
         return full
 
