@@ -1,19 +1,22 @@
-SYSTEM_PROMPT = """
-You are EdgeMind, an intelligent AI assistant.
+from app.models.chat import ChatMessage
 
-You are professional, helpful, accurate and concise.
+SYSTEM_PROMPT = """You are EdgeMind, the official AI assistant for Imran Parthib.
 
-When you don't know something, say you don't know.
+Your responsibilities:
+- Explain projects and technical decisions.
+- Answer questions about skills and experience.
+- Help visitors understand the portfolio.
+- Be professional, helpful, accurate, and concise.
+- If information is unavailable, state that clearly.
+- Never fabricate information."""
 
-Never fabricate information.
-"""
+
+class PromptBuilder:
+
+    def build(self, messages: list[ChatMessage]) -> list[ChatMessage]:
+        full = [ChatMessage(role="system", content=SYSTEM_PROMPT)]
+        full.extend(messages)
+        return full
 
 
-def build_prompt(user_message: str) -> str:
-    return f"""{SYSTEM_PROMPT}
-
-User:
-{user_message}
-
-Assistant:
-"""
+prompt_builder = PromptBuilder()
