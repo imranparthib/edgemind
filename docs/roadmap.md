@@ -14,9 +14,14 @@
 
 | Priority | Feature |
 |---|---|
-| High | Milestone 4: Fine-tune model in Google Colab, upload to HF, switch MODEL_ID |
 | High | Context control layer (token budget, history trimming) |
-| Medium | Conversation memory expiry / TTL |
+| Medium | Frontend (Next.js chat UI) |
 | Medium | Tool calling (search, browse) |
-| Low | Frontend (Next.js chat UI) |
+| Low | Conversation memory expiry / TTL |
 | Low | Docker deployment |
+
+## On Hold
+
+| Feature | Reason |
+|---|---|
+| Milestone 4: Fine-tune in Colab | High risk of regressing instruction-following. Only pursue as a research experiment with a curated dataset. RAG + prompting already cover personalization needs. |

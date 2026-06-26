@@ -48,4 +48,4 @@ curl -N -X POST http://localhost:8000/chat \
 | 2 | Streaming token generation | ✔ |
 | 3 | RAG with knowledge base | ✔ |
 | — | Conversation memory (SQLite) | ✔ |
-| 4 | Fine-tune in Colab & deploy custom model | 🔜 |
+| 4 | Fine-tune in Colab & deploy custom model | ⏸️ on hold |
