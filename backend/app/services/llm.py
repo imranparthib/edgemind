@@ -1,12 +1,10 @@
-from app.services.prompt import build_prompt
+from app.interfaces.llm import BaseLLM
 
 
 class LLMService:
 
-    async def generate(self, message: str) -> str:
-        prompt = build_prompt(message)
+    def __init__(self, provider: BaseLLM) -> None:
+        self._provider = provider
 
-        return (
-            "Mock response from EdgeMind.\n\n"
-            f"Prompt length: {len(prompt)} characters."
-        )
+    async def generate(self, message: str) -> str:
+        return await self._provider.generate(message)
