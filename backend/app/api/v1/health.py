@@ -1,7 +1,11 @@
 from fastapi import APIRouter
 
-router = APIRouter()
+router = APIRouter(tags=["Health"])
+
 
 @router.get("/health")
-async def health_check():
-    return {"status": "ok"}
+async def health():
+    return {
+        "status": "healthy",
+        "service": "EdgeMind API"
+    }

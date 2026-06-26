@@ -1,18 +1,18 @@
 from fastapi import FastAPI
-from app.api.v1 import health, chat
+
+from app.api.router import api_router
+from app.core.config import settings
 
 app = FastAPI(
-    title="EdgeMind API",
-    description="Intelligent AI Assistant Backend",
-    version="0.1.0",
+    title=settings.app_name,
+    debug=settings.debug,
 )
 
-app.include_router(health.router, prefix="/api/v1")
-app.include_router(chat.router, prefix="/api/v1")
+app.include_router(api_router)
 
 
 @app.get("/")
-def root():
+async def root():
     return {
-        "message": "Welcome to EdgeMind API 🚀"
+        "message": "Welcome to EdgeMind 🚀"
     }
