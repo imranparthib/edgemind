@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     host: str = "0.0.0.0"
     port: int = 8000
 
-    hf_model: str = ""
+    hf_model: str = "Qwen/Qwen2.5-1.5B-Instruct"
     hf_token: str = ""
 
     qdrant_url: str = "http://localhost:6333"
