@@ -2,6 +2,7 @@ from collections.abc import AsyncGenerator
 
 from app.interfaces.memory import BaseMemory
 from app.models.chat import ChatMessage
+from app.services.context_manager import trim_history
 from app.services.llm import LLMService
 from app.services.rag import RagService
 
@@ -34,7 +35,7 @@ class ChatService:
         if self._memory:
             stored = await self._memory.get_history(session_id)
         history = [ChatMessage(**m) for m in stored]
-        return history + messages
+        return trim_history(history + messages)
 
     async def _save_turn(
         self, session_id: str, messages: list[ChatMessage], reply: str,
