@@ -10,6 +10,3 @@ class LLMService:
             "Mock response from EdgeMind.\n\n"
             f"Prompt length: {len(prompt)} characters."
         )
-
-
-llm_service = LLMService()
