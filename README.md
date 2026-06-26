@@ -1,46 +1,51 @@
-# EdgeMind
+# EdgeMind 🧠
 
-EdgeMind is an intelligent AI assistant designed to understand and interact with a personalized knowledge base using modern LLM technologies.
+EdgeMind is a local AI assistant backend powered by FastAPI and HuggingFace Transformers. It runs a Qwen2.5-1.5B-Instruct model on GPU with streaming, RAG, and persistent conversation memory.
 
 ## Features
 
-- FastAPI backend
-- Fine-tuned Hugging Face models
-- Retrieval-Augmented Generation (RAG)
-- Conversation memory
-- Semantic search
-- REST API
-- Portfolio knowledge base
-- Tool calling (planned)
+- **Local GPU inference** — Qwen2.5-1.5B-Instruct on GTX 1650 Ti (float16)
+- **Streaming** — Token-by-token via Server-Sent Events
+- **RAG** — FAISS + Sentence Transformers over a personal knowledge base
+- **Conversation memory** — Per-session history persisted in SQLite
+- **Modular providers** — HuggingFace active; OpenAI/Ollama stubs ready
+- **REST API** — Single `/chat` endpoint with dual JSON/SSE mode
 
 ## Tech Stack
 
-- Python
-- FastAPI
-- Transformers
-- PyTorch
-- PEFT (LoRA)
-- Qdrant
-- Sentence Transformers
-- Docker
+- Python / FastAPI / Uvicorn
+- HuggingFace Transformers / PyTorch
+- FAISS / Sentence Transformers (all-MiniLM-L6-v2)
+- SQLite (aiosqlite)
+- NVIDIA GTX 1650 Ti (CUDA)
 
-## Project Status
+## Quickstart
 
-🚧 Under active development.
+```bash
+cd backend
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python -m uvicorn app.main:app --reload
+```
 
+```bash
+# Non-streaming
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"messages": [{"role":"user", "content":"Who is Imran Parthib?"}]}'
 
-Notes:
+# Streaming
+curl -N -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"messages": [{"role":"user", "content":"Hello"}], "stream": true}'
+```
 
-My proposal
+## Progress
 
-I think we're entering Sprint 2, and I'd like us to do it in four milestones:
-
-Milestone 1 (Today)
-Replace MockLLMProvider with a real HuggingFaceLLMProvider.
-Verify that EdgeMind can generate responses locally.
-Milestone 2
-Add streaming token generation so your portfolio can display responses as they're generated.
-Milestone 3
-Add RAG, connecting the knowledge/ directory so EdgeMind answers using your portfolio content instead of relying only on the model's general knowledge.
-Milestone 4
-Fine-tune the model in Google Colab, upload it to Hugging Face, and then change only the MODEL_ID in your configuration to switch from the base model to your own EdgeMind model.
+| # | Milestone | Status |
+|---|---|---|
+| 1 | Base LLM integration (HuggingFace) | ✔ |
+| 2 | Streaming token generation | ✔ |
+| 3 | RAG with knowledge base | ✔ |
+| — | Conversation memory (SQLite) | ✔ |
+| 4 | Fine-tune in Colab & deploy custom model | 🔜 |
