@@ -14,6 +14,7 @@
 
 | Priority | Feature |
 |---|---|
+| High | Milestone 4: Fine-tune model in Google Colab, upload to HF, switch MODEL_ID |
 | High | Context control layer (token budget, history trimming) |
 | Medium | Conversation memory expiry / TTL |
 | Medium | Tool calling (search, browse) |
