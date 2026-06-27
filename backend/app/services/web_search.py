@@ -1,5 +1,4 @@
 import asyncio
-from collections.abc import Coroutine
 from concurrent.futures import ThreadPoolExecutor
 
 from ddgs import DDGS
@@ -12,17 +11,25 @@ class WebSearchService:
     def __init__(self, enabled: bool = True) -> None:
         self._enabled = enabled
 
-    async def search(self, query: str, max_results: int = 5) -> list[str]:
+    async def search(self, query: str, max_results: int = 3) -> list[str]:
         if not self._enabled or not query:
             return []
+        current_year = "2026"
+        time_words = {"current", "latest", "recent", "now", "today", "new", "update"}
+        if any(w in query.lower() for w in time_words):
+            query = f"{query} {current_year}"
         loop = asyncio.get_running_loop()
         results: list[dict] = await loop.run_in_executor(
             _executor, self._search_sync, query, max_results,
         )
-        return [
-            f"{r.get('title', '')}: {r.get('body', '')}"
-            for r in results
-        ]
+        seen: set[str] = set()
+        out: list[str] = []
+        for r in results:
+            body = (r.get("body") or "").strip()
+            if body and body not in seen:
+                seen.add(body)
+                out.append(f"• {body}")
+        return out
 
     def _search_sync(self, query: str, max_results: int) -> list[dict]:
         try:
