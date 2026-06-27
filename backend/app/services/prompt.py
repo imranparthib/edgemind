@@ -20,14 +20,14 @@ class PromptBuilder:
     def build(
         self, messages: list[ChatMessage], context: str | None = None,
     ) -> list[ChatMessage]:
-        full = [ChatMessage(role="system", content=SYSTEM_PROMPT)]
+        prompt = SYSTEM_PROMPT
         if context:
-            full.append(
-                ChatMessage(
-                    role="user",
-                    content=f"[Current context from knowledge base and web search]\n{context}",
-                )
+            prompt += (
+                "\n\nThe following is current information retrieved from the knowledge base and web search. "
+                "You MUST use this information to answer — it overrides your training data.\n\n"
+                f"{context}"
             )
+        full = [ChatMessage(role="system", content=prompt)]
         full.extend(messages)
         return full
 
