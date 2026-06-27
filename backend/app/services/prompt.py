@@ -10,9 +10,7 @@ Rules:
 - Be professional, helpful, and accurate.
 - Never fabricate information.
 
-You have access to current web search results in the context below.
-Use them to answer questions about recent events, technologies, or anything outside the knowledge base.
-When citing web results, keep it brief — don't quote entire articles."""
+CRITICAL: Below you will be given current information from a web search. This information is more recent than your training data. You MUST base your answer on this information, not on what you learned during training. If the web search information contradicts your training, trust the web search."""
 
 
 class PromptBuilder:
@@ -20,14 +18,14 @@ class PromptBuilder:
     def build(
         self, messages: list[ChatMessage], context: str | None = None,
     ) -> list[ChatMessage]:
-        prompt = SYSTEM_PROMPT
+        full = [ChatMessage(role="system", content=SYSTEM_PROMPT)]
         if context:
-            prompt += (
-                "\n\nThe following is current information retrieved from the knowledge base and web search. "
-                "You MUST use this information to answer — it overrides your training data.\n\n"
-                f"{context}"
+            full.append(
+                ChatMessage(
+                    role="system",
+                    content=f"Current facts (you MUST use these instead of your training knowledge):\n{context}",
+                )
             )
-        full = [ChatMessage(role="system", content=prompt)]
         full.extend(messages)
         return full
 
