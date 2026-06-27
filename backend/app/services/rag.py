@@ -53,4 +53,4 @@ class RagService:
                 current.append(line)
         if current:
             result.append("\n".join(current))
-        return [f"[{source}] {c.strip()}" for c in result if c.strip()]
+        return [c.strip() for c in result if c.strip()]
