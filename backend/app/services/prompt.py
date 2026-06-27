@@ -18,16 +18,19 @@ class PromptBuilder:
     def build(
         self, messages: list[ChatMessage], context: str | None = None,
     ) -> list[ChatMessage]:
-        full = [ChatMessage(role="system", content=SYSTEM_PROMPT)]
-        if context:
-            full.append(
+        result = [ChatMessage(role="system", content=SYSTEM_PROMPT)]
+        if context and messages:
+            last = messages[-1]
+            result.extend(messages[:-1])
+            result.append(
                 ChatMessage(
-                    role="system",
-                    content=f"Current facts (you MUST use these instead of your training knowledge):\n{context}",
+                    role=last.role,
+                    content=f"[Current information: {context}]\n\nNow, using the above as your source: {last.content}",
                 )
             )
-        full.extend(messages)
-        return full
+        else:
+            result.extend(messages)
+        return result
 
 
 prompt_builder = PromptBuilder()
