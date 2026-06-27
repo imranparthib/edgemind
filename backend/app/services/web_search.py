@@ -14,10 +14,9 @@ class WebSearchService:
     async def search(self, query: str, max_results: int = 3) -> list[str]:
         if not self._enabled or not query:
             return []
-        current_year = "2026"
-        time_words = {"current", "latest", "recent", "now", "today", "new", "update"}
-        if any(w in query.lower() for w in time_words):
-            query = f"{query} {current_year}"
+        q = query.lower()
+        if "current" in q or "latest" in q or "now" in q:
+            query = f"{query} 2025 2026"
         loop = asyncio.get_running_loop()
         results: list[dict] = await loop.run_in_executor(
             _executor, self._search_sync, query, max_results,
