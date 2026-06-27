@@ -1,6 +1,9 @@
+import logging
 from collections.abc import AsyncGenerator
 
 from app.interfaces.memory import BaseMemory
+
+logger = logging.getLogger(__name__)
 from app.models.chat import ChatMessage
 from app.services.context_manager import trim_history
 from app.services.llm import LLMService
@@ -33,10 +36,13 @@ class ChatService:
 
         if self._web_search:
             results = await self._web_search.search(query)
+            logger.info("Web search for %r returned %d results", query, len(results))
             if results:
                 parts.append("Web search results:\n" + "\n\n".join(results))
 
-        return "\n\n---\n\n".join(parts) if parts else None
+        context_str = "\n\n---\n\n".join(parts) if parts else None
+        logger.info("Web search context: %s chars", len(context_str) if context_str else 0)
+        return context_str
 
     async def _build_conversation(
         self, session_id: str, messages: list[ChatMessage],
