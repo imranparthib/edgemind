@@ -5,6 +5,7 @@ from app.models.chat import ChatMessage
 from app.services.context_manager import trim_history
 from app.services.llm import LLMService
 from app.services.rag import RagService
+from app.services.web_search import WebSearchService
 
 
 class ChatService:
@@ -14,19 +15,28 @@ class ChatService:
         llm_service: LLMService,
         rag_service: RagService | None = None,
         memory: BaseMemory | None = None,
+        web_search: WebSearchService | None = None,
     ) -> None:
         self._llm_service = llm_service
         self._rag = rag_service
         self._memory = memory
+        self._web_search = web_search
 
-    def _retrieve_context(self, messages: list[ChatMessage]) -> str | None:
-        if self._rag is None:
-            return None
+    async def _retrieve_context(self, messages: list[ChatMessage]) -> str | None:
         query = messages[-1].content if messages else ""
-        chunks = self._rag.retrieve(query)
-        if not chunks:
-            return None
-        return "\n\n".join(chunks)
+        parts: list[str] = []
+
+        if self._rag:
+            chunks = self._rag.retrieve(query)
+            if chunks:
+                parts.append("Knowledge base:\n" + "\n\n".join(chunks))
+
+        if self._web_search:
+            results = await self._web_search.search(query)
+            if results:
+                parts.append("Web search results:\n" + "\n\n".join(results))
+
+        return "\n\n---\n\n".join(parts) if parts else None
 
     async def _build_conversation(
         self, session_id: str, messages: list[ChatMessage],
@@ -50,7 +60,7 @@ class ChatService:
         self, session_id: str, messages: list[ChatMessage],
     ) -> str:
         full = await self._build_conversation(session_id, messages)
-        context = self._retrieve_context(full)
+        context = await self._retrieve_context(full)
         reply = await self._llm_service.generate(full, context=context)
         await self._save_turn(session_id, messages, reply)
         return reply
@@ -59,7 +69,7 @@ class ChatService:
         self, session_id: str, messages: list[ChatMessage],
     ) -> AsyncGenerator[str, None]:
         full = await self._build_conversation(session_id, messages)
-        context = self._retrieve_context(full)
+        context = await self._retrieve_context(full)
         reply_chunks: list[str] = []
         async for token in self._llm_service.generate_stream(full, context=context):
             reply_chunks.append(token)

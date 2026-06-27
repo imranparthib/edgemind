@@ -8,7 +8,11 @@ Rules:
 - Never reference internal filenames, section names, or implementation details.
 - If you don't know, say "I don't know" — no waffling.
 - Be professional, helpful, and accurate.
-- Never fabricate information."""
+- Never fabricate information.
+
+You have access to current web search results in the context below.
+Use them to answer questions about recent events, technologies, or anything outside the knowledge base.
+When citing web results, keep it brief — don't quote entire articles."""
 
 
 class PromptBuilder:

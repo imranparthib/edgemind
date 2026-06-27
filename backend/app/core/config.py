@@ -18,9 +18,7 @@ class Settings(BaseSettings):
 
     llm_provider: str = "local"
 
-    qdrant_url: str = "http://localhost:6333"
-
-    database_url: str = ""
+    web_search_enabled: bool = True
 
 
 settings = Settings()
