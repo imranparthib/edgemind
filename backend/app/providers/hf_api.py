@@ -17,7 +17,7 @@ class HuggingFaceInferenceAPIProvider(BaseLLM):
         result = await self.client.chat_completion(
             messages=[{"role": m.role, "content": m.content} for m in messages],
             model=self.model_id,
-            max_tokens=256,
+            max_tokens=1024,
             temperature=0.7,
             top_p=0.9,
         )
@@ -29,7 +29,7 @@ class HuggingFaceInferenceAPIProvider(BaseLLM):
         stream = await self.client.chat_completion(
             messages=[{"role": m.role, "content": m.content} for m in messages],
             model=self.model_id,
-            max_tokens=256,
+            max_tokens=1024,
             temperature=0.7,
             top_p=0.9,
             stream=True,
