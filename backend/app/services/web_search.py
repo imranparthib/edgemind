@@ -15,7 +15,8 @@ class WebSearchService:
         if not self._enabled or not query:
             return []
         q = query.lower()
-        if "current" in q or "latest" in q or "now" in q:
+        time_hints = {"current", "latest", "now", "today", "recent", "new", "who is"}
+        if any(h in q for h in time_hints):
             query = f"{query} 2025 2026"
         loop = asyncio.get_running_loop()
         results: list[dict] = await loop.run_in_executor(
