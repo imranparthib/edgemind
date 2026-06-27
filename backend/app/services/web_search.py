@@ -2,7 +2,7 @@ import asyncio
 from collections.abc import Coroutine
 from concurrent.futures import ThreadPoolExecutor
 
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 _executor = ThreadPoolExecutor(max_workers=1)
 
